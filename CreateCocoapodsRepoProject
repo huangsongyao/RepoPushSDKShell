@@ -21,7 +21,7 @@ if [[ $? -eq 0 ]]; then
 #移动至cocoapods公有库/私有库的工程的根目录下
 	cd $work_path/$repo_name
 #删除刚才下载的远端自动化打包脚本的文件夹
-	rm -r $shell_name
+	rm -rf $shell_name
 	echo "completed！"
 else
 
