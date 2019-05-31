@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#输入即将创建的cocoapods公有库/私有库的工程名称
+read -p "创建cocoapods远端仓库，请输入这个远端仓库的cocoapods私有库/公有库的工程名称：" repo_name
+
+#移动至当前路径下
+work_path=$(dirname $0)
+cd $work_path
+
+#根据指令创建cocoapods公有库/私有库的工程
+pod lib create $repo_name
+if [[ $? -eq 0 ]]; then
+#移动至cocoapods公有库/私有库的工程的根目录下
+	cd $work_path/$repo_name
+	shell_name="RepoPushSDKShell"
+#将远端的自动化脚本下载至本地
+	git clone https://github.com/huangsongyao/$shell_name
+#移动至自动化脚本的绝对路径下，并拷贝脚本文件到cocoapods公有库/私有库的工程的根目录下
+	cd  $work_path/$repo_name/$shell_name
+	cp RepoPushShell $work_path/$repo_name
+#移动至cocoapods公有库/私有库的工程的根目录下
+	cd $work_path/$repo_name
+#删除刚才下载的远端自动化打包脚本的文件夹
+	rm -r $shell_name
+	echo "completed！"
+else
+
+	echo "创建cocoapods私有库/公有库失败！请检查！"
+fi
+
+exit 0
