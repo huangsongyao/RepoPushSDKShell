@@ -7,14 +7,14 @@ cd $work_path
 
 #获取本地的repo列表
 repoList=$(pod repo list)
-#声明变量为XQCWealthSDK的财富sdk
-read -p "请输入私有库git地址的名称：" xqcWealthSDK
+#声明变量为sdk
+read -p "请输入私有库git地址的名称：" hsyCocoapodsSDK
 origin="origin"
-#判断本地的repo列表中是否存在了财富的repo，如果不存在，则将远端仓库添加至本地，并创建一个origin分支
-if [[ ${repoList} != *${xqcWealthSDK}* ]]; then
+#判断本地的repo列表中是否存在了对应的repo，如果不存在，则将远端仓库添加至本地，并创建一个origin分支
+if [[ ${repoList} != *${hsyCocoapodsSDK}* ]]; then
 	read -p "请输入GitHub仓库的仓库拥有者地址，例如https://github.com/huangsongyao，则输入huangsongyao：" developer
-	pod repo add $xqcWealthSDK https://github.com/$developer/$xqcWealthSDK.git
-	git remote add $origin https://github.com/$developer/$xqcWealthSDK.git
+	pod repo add $hsyCocoapodsSDK https://github.com/$developer/$hsyCocoapodsSDK.git
+	git remote add $origin https://github.com/$developer/$hsyCocoapodsSDK.git
 fi
 #打印本地的repo列表内容
 pod repo list
@@ -38,9 +38,10 @@ fi
 #执行commit和push操作，将update之后的更新内容提交至git远端仓库
 git pull $origin master
 git add .
-git commit -m "commit -> $xqcWealthSDK" 
+git commit -m "commit -> $hsyCocoapodsSDK" 
 git push $origin master
 
+#判断git操作是否成功，如果不成功则退出，避免出现漏提交
 if [[ $? -eq 0 ]]; then
 #私有库校验和更新repo输入y，公有库输入n
 	read -p "验证私有库/公有库请输入 -> 私有库[y] -> 公有库[n]：" privates
@@ -52,18 +53,19 @@ if [[ $? -eq 0 ]]; then
 		if [[ $isyes == *$prevateIncludeOtherPrivates* ]]; then
 			read -p "请输入所引用的私有库的git仓库地址，若有多个，请用[,]逗号隔开：" thisprivates
 
-			pod spec lint $xqcWealthSDK.podspec --sources="$thisprivates, https://github.com/CocoaPods/Specs.git" --allow-warnings --use-libraries
+			pod spec lint $hsyCocoapodsSDK.podspec --sources="$thisprivates, https://github.com/CocoaPods/Specs.git" --allow-warnings --use-libraries
 		else
-			pod spec lint $xqcWealthSDK.podspec --allow-warnings --use-libraries
+			pod spec lint $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
 		fi
 	else
+#
 		read -p "这个公有库中是否引用了其他私有库？ -> 引用过[y] -> 没引用过[n]：" publicIncludeOtherPrivates
 		if [[ $isyes == *$publicIncludeOtherPrivates* ]]; then
 			read -p "请输入所引用的私有库的git仓库地址，若有多个，请用[,]逗号隔开：" otherprivates
 
-			pod lib lint $xqcWealthSDK.podspec --sources="$otherprivates, https://github.com/CocoaPods/Specs.git" --allow-warnings --use-libraries
+			pod lib lint $hsyCocoapodsSDK.podspec --sources="$otherprivates, https://github.com/CocoaPods/Specs.git" --allow-warnings --use-libraries
 		else
-			pod lib lint $xqcWealthSDK.podspec --allow-warnings --use-libraries
+			pod lib lint $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
 		fi
 	fi
 
@@ -71,9 +73,9 @@ if [[ $? -eq 0 ]]; then
 	if [[ $? -eq 0 ]]; then
 #将合法的私有库/公有库文件.podspec推送至远端仓库
 		if [[ $isyes == *$privates* ]]; then
-			pod repo push $xqcWealthSDK $xqcWealthSDK.podspec --allow-warnings --use-libraries
+			pod repo push $hsyCocoapodsSDK $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
 		else
-			pod trunk push $xqcWealthSDK.podspec --allow-warnings --use-libraries
+			pod trunk push $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
 		fi
 #完成后执行拉去操作，将远端仓库的内容拉取至本地
 		git pull $origin master
