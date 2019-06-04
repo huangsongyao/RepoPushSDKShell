@@ -1,0 +1,22 @@
+
+#!/bin/bash
+
+work_path=$(dirname $0)
+cd $work_path
+
+read -p "请确认用于剪裁的icon图标和本脚本所在的绝对路径保持一致，输入标准的icon图标名称，例如【icon.png】：" file_image
+
+icon_names=("Icon_1024x1024@3x.png" "Icon_180x180@3x.png" "Icon_120x120@2x.png" "Icon_120x120@3x.png" "Icon_80x80@2x.png" "Icon_87x87@3x.png" "Icon_58x58@2x.png" "Icon_60x60@3x.png" "Icon_40x40@2x.png")
+icon_sizes=(1024 180 120 120 80 87 58 60 40)
+
+folder="ios_icons"
+rm -rf $folder
+mkdir $folder
+
+for (( i = 0; i < ${#icon_names[@]}; i++ )); do
+	sips -z ${icon_sizes[i]} ${icon_sizes[i]} --matchTo '/System/Library/ColorSync/Profiles/sRGB Profile.icc' $work_path/$file_image --out $work_path/$folder/${icon_names[i]}
+	# cp $(sips -Z ${icon_sizes[i]} $work_path/${icon_names[i]}) $work_path/$folder
+done
+
+echo "completed!"
+exit 0
