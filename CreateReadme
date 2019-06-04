@@ -1,0 +1,26 @@
+
+#!/bin/bash
+
+#通过#区分.md文件的内容
+read -p "请输入README.md文件的内容，并将内容使用[#]逗号分隔开：" read_me
+
+#将.md文件的创建路径移动到当前脚本的绝对路径下
+work_path=$(dirname $0)
+cd $work_path
+
+#暂时暂用IFS，将分隔符设置为#
+OLD_IFS="$IFS" 
+IFS="#"
+#将.md文件输入的内容使用#作为依据分割成数组
+reads=($read_me) 
+IFS="$OLD_IFS" 
+
+#遍历内容数组，并写入文件
+read_me_name="README.md"
+for x in ${reads[@]}; do 
+    echo "$x" >> $read_me_name
+done
+
+echo "completed!"
+exit 0
+
