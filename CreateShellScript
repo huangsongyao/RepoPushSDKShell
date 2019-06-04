@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#由外部传入脚本名称
+read -p "自动创建可执行文件shell脚本，请输入shell脚本的文件名称，例如【shscript】：" sh_script
+
+#移动至当前脚本的路径下，来创建.sh的脚本
+work_path=$(dirname $0)
+cd $work_path
+
+#写入脚本的解释器内容
+cat>$sh_script.sh<<EOF
+
+#!/bin/bash
+
+EOF
+
+#如果脚本没有运行权限，则赋予脚本运行权限
+if [[ ! -x "$sh_script.sh" ]]; then
+	mv $sh_script.sh $sh_script
+	sudo chmod +x $sh_script
+fi
+
+#完成后退出
+echo "completed!"
+exit 0
