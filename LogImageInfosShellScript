@@ -1,0 +1,25 @@
+
+#!/bin/bash
+
+#工作路径设置在脚本的绝对路径下
+work_path=$(dirname $0)
+cd $work_path
+
+#后缀类型为png格式
+suffix=".png"
+#匹配当前路径下的所有后缀格式为png的图片
+png_images=`ls -v *$suffix`
+#获取满足条件的图片个数，并遍历数组
+length=${#png_images[@]}
+for (( i = 0; i < length; i++ )); do
+	img=${png_images[i]}
+	#如果图片的名称中不包含.png的后缀，则添加上去
+	if [[ $img != *$suffix* ]]; then
+		img=${png_images[i]}$suffix
+	fi
+	#打印图片信息
+	file $img
+done
+
+echo "compeleted!"
+exit 0
