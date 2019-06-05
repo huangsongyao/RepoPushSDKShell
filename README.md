@@ -5,3 +5,5 @@
 3、RepoPushShell：基于cocoapods的私有库/公有库工程的自动化push repo脚本，作用是自动化实现cocoapods的私有库/公有库工程的整个push repo流程，并对私有库引用私有库，公有库引用私有库的情况做了支出；
 
 4、CreateReadme：简单小脚本，用于快速创建README.md文件，文件的内容如果需要换行的请用#隔开
+
+5、ClippingImageShell：简单的自动化制作整套icon的脚本，用于动态裁切出一套适用于竖屏的ios-icon，使用时需要一张未做基本裁切的icon图标，最好是1024x1024尺寸的
