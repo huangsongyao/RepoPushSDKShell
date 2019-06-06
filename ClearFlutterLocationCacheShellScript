@@ -1,0 +1,32 @@
+
+#!/bin/bash
+
+#执行flutter的flutter packages get指令时，有时会因为存在上一个指令阻塞导致提示了: Waiting for another flutter command to release the startup lock... 此时可以使用这个脚本解决这个问题
+#获取系统主目录下
+home_path=${HOME}
+#在主目录下进入flutter的cache文件夹中
+flutter_path="flutter/bin/cache"
+cd $home_path/$flutter_path
+echo $home_path/$flutter_path
+location="lockfile"
+#如果找不到lockfile缓存文件则直接退出
+if [[ ! -f "$location" ]]; then
+	echo "lockfile缓存文件不存在！"
+	exit 0
+fi
+
+#如果存在缓存文件，则删除这个缓存文件
+rm -rf $location
+ls
+
+#使用指令注入applescript脚本，执行退出Android Studio
+program_name="Android Studio"
+osascript <<EOF
+	tell application "$program_name"
+		Quit the application
+	end tell
+EOF
+
+#完成后退出应用程序
+echo "completed!"
+exit 0

@@ -11,3 +11,7 @@
 6、LogImageInfosShellScript：简单的png格式图片、图标信息打印脚本，用于快速打印出当前脚本路径下的所有png格式图片的信息
 
 7、ModiffitedImageNamesShellScript：批量修改图标名称，用于处理@1x、@2x、@3x图标的批量修改，面向格式为png格式
+
+8、FlutterStartShellScript：启动flutter工程的自动脚本，用于快速启动flutter工程，并且允许设置release或者debug模式，使用时需要将脚本放置在flutter工程的root目录下
+
+9、ClearFlutterLocationCacheShellScript：清除flutter工程中的lockfile缓存文件，用于处理Waiting for another flutter command to release the startup lock...问题

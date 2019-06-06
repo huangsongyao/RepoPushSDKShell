@@ -1,22 +1,27 @@
 
 #!/bin/bash
 
+#将工作目录移动至当前路径下
 work_path=$(dirname $0)
 cd $work_path
 
+#由外部输入用于裁剪的icon图片名称
 read -p "请确认用于剪裁的icon图标和本脚本所在的绝对路径保持一致，输入标准的icon图标名称，例如【icon.png】：" file_image
 
+#设置好一组icon的图片名称和图片的边距两个集合
 icon_names=("Icon_1024x1024@3x.png" "Icon_180x180@3x.png" "Icon_120x120@2x.png" "Icon_120x120@3x.png" "Icon_80x80@2x.png" "Icon_87x87@3x.png" "Icon_58x58@2x.png" "Icon_60x60@3x.png" "Icon_40x40@2x.png")
 icon_sizes=(1024 180 120 120 80 87 58 60 40)
 
+#创建临时文件夹用于存储裁剪后的一组icon
 folder="ios_icons"
 rm -rf $folder
 mkdir $folder
 
+#循环裁剪出一组符合要求的icon
 for (( i = 0; i < ${#icon_names[@]}; i++ )); do
 	sips -z ${icon_sizes[i]} ${icon_sizes[i]} --matchTo '/System/Library/ColorSync/Profiles/sRGB Profile.icc' $work_path/$file_image --out $work_path/$folder/${icon_names[i]}
-	# cp $(sips -Z ${icon_sizes[i]} $work_path/${icon_names[i]}) $work_path/$folder
 done
 
+#结束后退出进程
 echo "completed!"
 exit 0

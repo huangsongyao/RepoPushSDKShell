@@ -1,0 +1,22 @@
+
+#!/bin/bash
+
+#在flutter的工程的root目下执行这个脚本
+work_path=$(dirname $0)
+cd ${work_path}
+
+#打印当前所有已经启动的模拟器或者真机设备的设备id
+echo `flutter devices`
+#输入所选的设备id用以执行flutter程序
+read -p "请输入模拟器的id号:" emulatorId
+#是否启用release模式
+read -p "debug or release(y=>release/n=>debug):" runMode
+if [ $runMode == "y" ]; then
+	flutter run --release -d $emulatorId
+else
+	flutter run -d $emulatorId
+fi
+
+#启动后退出脚本进程，同时会自动调起flutter进程
+echo "completed!"
+exit 0
