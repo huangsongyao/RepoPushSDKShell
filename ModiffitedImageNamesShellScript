@@ -9,23 +9,21 @@ read -p "请输入批量修改的图标icon的名称：" icon_name
 suffix=".png"
 #匹配当前路径下的所有后缀格式为png的图片
 png_images=`ls -v *$suffix`
-#获取满足条件的图片个数
-length=${#png_images[@]}
 #@2x和@3x的类型变量
 twofold="@2x"
 threefold="@3x"
 
 #遍历内容
-for (( i = 0; i < length; i++ )); do
+for image in ${png_images[@]}; do
 	#默认名称为输入的名称
 	img=$icon_name
 	#如果遍历的项包含@2x，则拼接
-	if [[ ${png_images[i]} == *$twofold* ]]; then
+	if [[ $image == *$twofold* ]]; then
 		img=$icon_name$twofold
 	fi
 
 	#如果遍历的项包含@3x，则拼接
-	if [[ ${png_images[i]} == *$threefold* ]]; then
+	if [[ $image == *$threefold* ]]; then
 		img=$icon_name$threefold
 	fi
 
@@ -33,9 +31,9 @@ for (( i = 0; i < length; i++ )); do
 	if [[ $img != *$suffix* ]]; then
 		img=$img$suffix
 	fi
+
 	#修改文件名称
-	mv ${png_images[i]}$suffix $img
-	
+	mv $image $img
 done
 
 echo "compeleted!"
