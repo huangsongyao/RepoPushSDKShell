@@ -1,0 +1,40 @@
+#!/bin/bash
+
+#脚本工作路径
+work_path=$(cd `dirname $0`; pwd)
+
+#模拟器路径及模拟器文件夹名称
+simulator_sdk="iPhoneSimulator_sdk"
+simulator_sdk_path="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/lib/"
+
+#真机路径及真机文件夹名称
+os_sdk="iPhoneOS_sdk"
+os_sdk_path="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/"
+
+#Mac的runtime路径及Mac的runtime文件夹名称
+runtime_sdk="iosRuntime_sdk"
+runtime_sdk_path="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/"
+
+#复制对应的内容至模拟器路径下
+cd $work_path/$simulator_sdk
+cp libstdc++.dylib libstdc++.6.dylib libstdc++.6.0.9.dylib $simulator_sdk_path
+
+#复制对应的内容至真机路径下
+cd $work_path/$os_sdk
+cp libstdc++.dylib libstdc++.6.dylib libstdc++.6.tbd libstdc++.6.0.9.tbd $os_sdk_path
+
+#复制对应的内容至Mac的runtime路径下
+cd  $work_path/$runtime_sdk
+cp libstdc++.6.dylib $runtime_sdk_path
+
+#使用指令注入applescript脚本，执行退出Xcode
+program_name="Xcode"
+osascript <<EOF
+	tell application "$program_name"
+		Quit the application
+	end tell
+EOF
+
+#完成后退出
+echo "completed!"
+exit 0
