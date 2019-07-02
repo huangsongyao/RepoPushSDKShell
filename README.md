@@ -15,3 +15,5 @@
 8、FlutterStartShellScript：启动flutter工程的自动脚本，用于快速启动flutter工程，并且允许设置release或者debug模式，使用时需要将脚本放置在flutter工程的root目录下
 
 9、ClearFlutterLocationCacheShellScript：清除flutter工程中的lockfile缓存文件，用于处理Waiting for another flutter command to release the startup lock...问题
+
+10、xcode10_link_lstdc文件夹中的CreatteXcodeDtylib脚本：用于处理xcode10以后被移除的dylib库缺失问题
