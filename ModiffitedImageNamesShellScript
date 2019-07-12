@@ -1,10 +1,14 @@
 #!/bin/bash
 
-#工作路径设置在脚本的绝对路径下
+#工作路径设置在脚本的绝对路径下【获取脚本名称：script_name=${BASH_SOURCE-$0}】
 work_path=$(dirname $0)
 cd $work_path
 
+#由外部输入需要批量修改的图标的名称
 read -p "请输入批量修改的图标icon的名称：" icon_name
+
+#预先设置好工作脚本在遍历png文件时，忽略png文件中可能存在的空格符
+IFS=$(echo -en "\n\b")
 #后缀类型为png格式
 suffix=".png"
 #匹配当前路径下的所有后缀格式为png的图片
@@ -13,7 +17,7 @@ png_images=`ls -v *$suffix`
 twofold="@2x"
 threefold="@3x"
 
-#遍历内容
+#第二次遍历，修改文件的名称
 for image in ${png_images[@]}; do
 	#默认名称为输入的名称
 	img=$icon_name
