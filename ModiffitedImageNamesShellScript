@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#预先设置好工作脚本时，如果路径中存在空格符或者遍历文件时存在空格符时，预先进行处理
+IFS=$(echo -en "\n\b")
 #工作路径设置在脚本的绝对路径下【获取脚本名称：script_name=${BASH_SOURCE-$0}】
 work_path=$(dirname $0)
 cd $work_path
@@ -7,8 +9,6 @@ cd $work_path
 #由外部输入需要批量修改的图标的名称
 read -p "请输入批量修改的图标icon的名称：" icon_name
 
-#预先设置好工作脚本在遍历png文件时，忽略png文件中可能存在的空格符
-IFS=$(echo -en "\n\b")
 #后缀类型为png格式
 suffix=".png"
 #匹配当前路径下的所有后缀格式为png的图片
