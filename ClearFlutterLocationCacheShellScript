@@ -1,5 +1,7 @@
 
 #!/bin/bash
+#Author by huangsongyao 
+#huangsongyao -> https://github.com/huangsongyao
 
 #执行flutter的flutter packages get指令时，有时会因为存在上一个指令阻塞导致提示了: Waiting for another flutter command to release the startup lock... 此时可以使用这个脚本解决这个问题
 #获取系统主目录下

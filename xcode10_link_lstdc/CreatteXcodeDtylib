@@ -1,4 +1,6 @@
 #!/bin/bash
+#Author by huangsongyao 
+#huangsongyao -> https://github.com/huangsongyao
 
 #脚本工作路径
 work_path=$(cd `dirname $0`; pwd)

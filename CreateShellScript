@@ -1,4 +1,6 @@
 #!/bin/bash
+#Author by huangsongyao 
+#huangsongyao -> https://github.com/huangsongyao
 
 #由外部传入脚本名称
 read -p "自动创建可执行文件shell脚本，请输入shell脚本的文件名称，例如【shscript】：" sh_script
@@ -9,8 +11,9 @@ cd $work_path
 
 #写入脚本的解释器内容
 cat>$sh_script.sh<<EOF
-
 #!/bin/bash
+#Author by huangsongyao 
+#huangsongyao -> https://github.com/huangsongyao
 
 EOF
 

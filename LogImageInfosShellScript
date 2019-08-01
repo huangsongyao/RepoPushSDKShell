@@ -1,5 +1,7 @@
 
 #!/bin/bash
+#Author by huangsongyao 
+#huangsongyao -> https://github.com/huangsongyao
 
 #工作路径设置在脚本的绝对路径下
 work_path=$(dirname $0)

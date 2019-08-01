@@ -1,4 +1,6 @@
 #!/bin/bash
+#Author by huangsongyao 
+#huangsongyao -> https://github.com/huangsongyao
 
 #输入即将创建的cocoapods公有库/私有库的工程名称
 read -p "创建cocoapods远端仓库，请输入这个远端仓库的cocoapods私有库/公有库的工程名称：" repo_name

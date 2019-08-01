@@ -1,4 +1,6 @@
 #!/bin/bash
+#Author by huangsongyao 
+#huangsongyao -> https://github.com/huangsongyao
 
 #预先设置好工作脚本时，如果路径中存在空格符或者遍历文件时存在空格符时，预先进行处理
 IFS=$(echo -en "\n\b")

@@ -1,4 +1,5 @@
 #!/bin/bash
+#Author by huangsongyao 
 #huangsongyao -> https://github.com/huangsongyao
 
 #脚本绝对路径必须和私有库的.git隐藏文件在同一绝对路径下【需要查看时，请使用快捷键】# shname=$(basename $BASH_SOURCE) -> 获取脚本名称
