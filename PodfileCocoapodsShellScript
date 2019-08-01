@@ -14,7 +14,7 @@ folder="$work_path/$file"
 #输入需要pod的目标targets，由于工程可能存在多个target，此处由dev来决定手动输入的targets内容
 read -p "请输入需要执行pods的目标targets，如果工程中存在多个target，则请使用英文逗号[,]隔开：" project_target
 if [[ ! -f "$folder" ]]; then
-#如果不存在，则创建Podfile文件，并使用applescript来写入固定的cocoapods文件的格式内容
+#如果不存在，则创建Podfile文件，并使用applescript来写入固定的cocoapods文件的格式内容，其中，默认pod
 cat>$file<<EOF
 platform :ios, '8.0'
 targetsString = '$project_target'
@@ -22,13 +22,16 @@ targets = targetsString.split(',')
 targets.each do |t|
 	target t do
 		pod 'RxSwift', '~> 5.0.0'
+		pod 'RxCocoa', '~> 5.0.0'
+		pod 'ReactiveObjC'
 	end
 end
 EOF
 #写入文件后，执行install指令，创建cocoapods插件
+vim $file
 pod install
+#如果install执行失败，则移除当前目录下的Podfile文件并退出
 if [[ $? -ne 0 ]]; then	
-	#如果install执行失败，则移除当前目录下的Podfile文件并退出
 	rm -rf $file
 	rm -rf $file.lock
 	pods_files="Pods"
@@ -37,6 +40,7 @@ fi
 
 else
 #如果已经创建过，则直接执行update指令，更新
+vim $file
 pod update
 
 fi
