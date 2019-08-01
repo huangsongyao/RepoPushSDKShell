@@ -17,3 +17,5 @@
 9、ClearFlutterLocationCacheShellScript：清除flutter工程中的lockfile缓存文件，用于处理Waiting for another flutter command to release the startup lock...问题
 
 10、xcode10_link_lstdc文件夹中的CreatteXcodeDtylib脚本：用于处理xcode10以后被移除的dylib库缺失问题
+
+11、PodfileCocoapodsShellScript：用于未生成cocoapods插件或者已经生成了cocoapods插件的Xcode工程的快速生成或者更新，将脚本放置于root根目录下，双击即可
