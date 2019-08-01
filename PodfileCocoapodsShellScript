@@ -31,7 +31,10 @@ if [[ $? -ne 0 ]]; then
 	#如果install执行失败，则移除当前目录下的Podfile文件并退出
 	rm -rf $file
 	rm -rf $file.lock
+	pods_files="Pods"
+	rm -rf $pods_files
 fi
+
 else
 #如果已经创建过，则直接执行update指令，更新
 pod update
