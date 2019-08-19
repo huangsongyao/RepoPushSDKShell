@@ -39,8 +39,12 @@ if [[ $? -ne 0 ]]; then
 fi
 
 else
-#如果已经创建过，则直接执行update指令，更新
-vim $file
+#由外部决定是否需要打开vim编辑器编辑Podfile内荣
+read -p "是否需要使用vim编辑器重新编辑Podfile文件？需要输入y，否则输入n：" open_vim
+if [[ "$open_vim" = "y" ]]; then
+	vim $file
+fi
+#执行update指令，更新cocoapods的插件库
 pod update
 
 fi
