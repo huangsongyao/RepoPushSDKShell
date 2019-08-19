@@ -25,9 +25,9 @@ if [[ $? -eq 0 ]]; then
 #删除刚才下载的远端自动化打包脚本的文件夹
 	rm -rf $shell_name
 	echo "completed！"
+	exit 0
 else
-
 	echo "创建cocoapods私有库/公有库失败！请检查！"
+	exit 0
 fi
-
-exit 0
+ 
