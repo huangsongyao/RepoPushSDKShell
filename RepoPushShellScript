@@ -10,13 +10,14 @@ cd $work_path
 repoList=$(pod repo list)
 #声明变量为sdk
 read -p "请输入私有库git地址的名称：" hsyCocoapodsSDK
-origin="origin"
+read -p "请输入GitHub仓库的仓库拥有者地址，例如https://github.com/huangsongyao，则输入huangsongyao：" developer_name
+# origin="origin"
+git_url=https://github.com/$developer_name/$hsyCocoapodsSDK.git
+echo $git_url
 #判断本地的repo列表中是否存在了对应的repo，如果不存在，则将远端仓库添加至本地，并创建一个origin分支
 if [[ ${repoList} != *${hsyCocoapodsSDK}* ]]; then
-	read -p "请输入GitHub仓库的仓库拥有者地址，例如https://github.com/huangsongyao，则输入huangsongyao：" 
-	git init
-	pod repo add $hsyCocoapodsSDK https://github.com/$developer/$hsyCocoapodsSDK.git
-	git remote add $origin https://github.com/$developer/$hsyCocoapodsSDK.git
+	pod repo add $hsyCocoapodsSDK git_url
+	#git remote add origin git_url
 fi
 #打印本地的repo列表内容
 pod repo list
@@ -25,7 +26,6 @@ pod repo list
 cd $work_path/Example
 #执行update，更新私有库的pod仓库插件，同步内容
 pod update
-
 #将当前路径移动至.git隐藏文件和脚本所在的绝对路径下
 cd $work_path
 #输入当前更新财富私有库repo的远端仓库的tag标签号
@@ -37,11 +37,15 @@ if [[ ${allTags} != *${thisTag}* ]]; then
 	git push --tags
 fi
 
+#创建origin远程分支
 #执行commit和push操作，将update之后的更新内容提交至git远端仓库
-git pull $origin master
+git init
 git add .
 git commit -m "commit -> $hsyCocoapodsSDK" 
-git push $origin master
+git remote add origin $git_url
+git pull $git_url master
+git push -u $git_url master
+git push $git_url master
 
 #判断git操作是否成功，如果不成功则退出，避免出现漏提交
 if [[ $? -eq 0 ]]; then
@@ -54,7 +58,6 @@ if [[ $? -eq 0 ]]; then
 		read -p "这个私有库中是否引用了其他私有库？ -> 引用过[y] -> 没引用过[n]：" prevateIncludeOtherPrivates
 		if [[ $isyes == *$prevateIncludeOtherPrivates* ]]; then
 			read -p "请输入所引用的私有库的git仓库地址，若有多个，请用[,]逗号隔开：" thisprivates
-
 			pod spec lint $hsyCocoapodsSDK.podspec --sources="$thisprivates, https://github.com/CocoaPods/Specs.git" --allow-warnings --use-libraries
 		else
 			pod spec lint $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
@@ -64,7 +67,6 @@ if [[ $? -eq 0 ]]; then
 		read -p "这个公有库中是否引用了其他私有库？ -> 引用过[y] -> 没引用过[n]：" publicIncludeOtherPrivates
 		if [[ $isyes == *$publicIncludeOtherPrivates* ]]; then
 			read -p "请输入所引用的私有库的git仓库地址，若有多个，请用[,]逗号隔开：" otherprivates
-
 			pod lib lint $hsyCocoapodsSDK.podspec --sources="$otherprivates, https://github.com/CocoaPods/Specs.git" --allow-warnings --use-libraries
 		else
 			pod lib lint $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
@@ -73,25 +75,31 @@ if [[ $? -eq 0 ]]; then
 
 #判断校验指令是否成功，根据结果决定接下去的操作步骤
 	if [[ $? -eq 0 ]]; then
+#由发布者决定在通过验证后是否立即将.podspec发布到对应的环境下
+		read -p "是否立即将私有库/公有库的.podspec发布出去？-> 立即发布请输入[y] -> 不立即发布请输入[n]：" release_podspec
+		if [[ $isyes == *release_podspec* ]]; then
 #将合法的私有库/公有库文件.podspec推送至远端仓库
-		if [[ $isyes == *$privates* ]]; then
-			pod repo push $hsyCocoapodsSDK $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
-		else
-			pod trunk push $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
-		fi
+			if [[ $isyes == *$privates* ]]; then
+				pod repo push $hsyCocoapodsSDK $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
+			else
+				pod trunk push $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
+			fi
 #完成后执行拉去操作，将远端仓库的内容拉取至本地
-		git pull $origin master
-#结束后打印完成
-		pod repo update
-		echo "completed!"
+			git pull $git_url master
+#同步更新本地的repo仓库状态
+			git repo update
+			echo "新版本发布完毕，正在准备退出进程!"
+		else
+			echo "podspec文件验证通过，不立即发布该版本，完成，准备退出进程!"
+		fi
 	else
 #如果校验不通过，打印失败
-		echo "failure!"
+		echo "podspec文件校验失败！请检查！注意----正在准备退出进程！"
 	fi
 else
 #如果git提交失败则退出
-	echo "Git提交失败，请检查。"
-	echo "failure!"
+	echo "Git仓库提交失败，请检查。"
+	echo "注意!由于仓库提交失败，正在退出进程，请稍后检查完毕确认问题后，重新执行本脚本!!"
 fi
 
 exit 0
