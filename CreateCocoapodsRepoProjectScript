@@ -14,7 +14,7 @@ pod lib create $repo_name
 if [[ $? -eq 0 ]]; then
 #移动至cocoapods公有库/私有库的工程的根目录下
 	cd $work_path/$repo_name
-	shell_name="RepoPushSDKShell"
+	shell_name="RepoPushShellScript"
 #将远端的自动化脚本下载至本地
 	git clone https://github.com/huangsongyao/$shell_name
 #移动至自动化脚本的绝对路径下，并拷贝脚本文件到cocoapods公有库/私有库的工程的根目录下

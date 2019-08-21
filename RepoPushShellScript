@@ -13,7 +13,8 @@ read -p "请输入私有库git地址的名称：" hsyCocoapodsSDK
 origin="origin"
 #判断本地的repo列表中是否存在了对应的repo，如果不存在，则将远端仓库添加至本地，并创建一个origin分支
 if [[ ${repoList} != *${hsyCocoapodsSDK}* ]]; then
-	read -p "请输入GitHub仓库的仓库拥有者地址，例如https://github.com/huangsongyao，则输入huangsongyao：" developer
+	read -p "请输入GitHub仓库的仓库拥有者地址，例如https://github.com/huangsongyao，则输入huangsongyao：" 
+	git init
 	pod repo add $hsyCocoapodsSDK https://github.com/$developer/$hsyCocoapodsSDK.git
 	git remote add $origin https://github.com/$developer/$hsyCocoapodsSDK.git
 fi
