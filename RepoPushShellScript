@@ -32,6 +32,12 @@ else
 fi
 #将当前路径移动至.git隐藏文件和脚本所在的绝对路径下
 cd $work_path
+#初始化git，创建远端仓库链接，创建origin远程分支
+read -p "请输入这个GitHub邮箱名称：" email_name 
+git init
+git config --global user.name $developer_name
+git config --global user.email $email_name
+git remote add origin $git_url
 #输入当前更新财富私有库repo的远端仓库的tag标签号
 read -p "请输入私有库的分支tag：" thisTag
 #如果输入的tag标签不存在，则将这个标签tag添加至本地，然后推送至远端仓库
@@ -41,21 +47,14 @@ if [[ ${allTags} != *${thisTag}* ]]; then
 	git push --tags
 fi
 
-#创建origin远程分支
 #执行commit和push操作，将update之后的更新内容提交至git远端仓库
-read -p "请输入这个GitHub用户名称：" user_name 
-read -p "请输入这个GitHub邮箱名称：" email_name 
-git init
-git config --global user.name $user_name
-git config --global user.email $email_name
 git add .
 git commit -m "commit -> $hsyCocoapodsSDK" 
-git remote add origin $git_url
-git pull --rebase origin $git_url --allow-unrelated-histories
-git pull origin $git_url --allow-unrelated-histories
-git push -u origin $git_url
-# git pull $git_url master --allow-unrelated-histories
-# git push -u $git_url master
+git push -u origin +master
+# git pull --rebase origin $git_url --allow-unrelated-histories
+# git pull origin $git_url --allow-unrelated-histories
+# git push -u origin $git_url
+
 #判断git操作是否成功，如果不成功则退出，避免出现漏提交
 if [[ $? -eq 0 ]]; then
 #私有库校验和更新repo输入y，公有库输入n
