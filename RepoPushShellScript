@@ -43,14 +43,19 @@ fi
 
 #创建origin远程分支
 #执行commit和push操作，将update之后的更新内容提交至git远端仓库
+read -p "请输入这个GitHub用户名称：" user_name 
+read -p "请输入这个GitHub邮箱名称：" email_name 
 git init
+git config --global user.name $user_name
+git config --global user.email $email_name
 git add .
 git commit -m "commit -> $hsyCocoapodsSDK" 
 git remote add origin $git_url
-git pull $git_url master
-git push -u $git_url master
-git push $git_url master
-
+git pull --rebase origin $git_url --allow-unrelated-histories
+git pull origin $git_url --allow-unrelated-histories
+git push -u origin $git_url
+# git pull $git_url master --allow-unrelated-histories
+# git push -u $git_url master
 #判断git操作是否成功，如果不成功则退出，避免出现漏提交
 if [[ $? -eq 0 ]]; then
 #私有库校验和更新repo输入y，公有库输入n
