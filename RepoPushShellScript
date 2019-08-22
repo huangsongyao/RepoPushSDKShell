@@ -11,13 +11,11 @@ repoList=$(pod repo list)
 #声明变量为sdk
 read -p "请输入私有库git地址的名称：" hsyCocoapodsSDK
 read -p "请输入GitHub仓库的仓库拥有者地址，例如https://github.com/huangsongyao，则输入huangsongyao：" developer_name
-# origin="origin"
 git_url=https://github.com/$developer_name/$hsyCocoapodsSDK.git
 echo $git_url
 #判断本地的repo列表中是否存在了对应的repo，如果不存在，则将远端仓库添加至本地，并创建一个origin分支
 if [[ ${repoList} != *${hsyCocoapodsSDK}* ]]; then
 	pod repo add $hsyCocoapodsSDK $git_url
-	#git remote add origin git_url
 fi
 #打印本地的repo列表内容
 pod repo list
@@ -25,7 +23,13 @@ pod repo list
 #将当前路径移动至Example的私有库项目下
 cd $work_path/Example
 #执行update，更新私有库的pod仓库插件，同步内容
-pod update
+isyes="yes"
+read -p "请输入操作类型：-> 执行install输入[y] -> 执行update输入[n]：" operate_type
+if [[ $isyes == *$operate_type* ]]; then
+	pod install
+else
+	pod update
+fi
 #将当前路径移动至.git隐藏文件和脚本所在的绝对路径下
 cd $work_path
 #输入当前更新财富私有库repo的远端仓库的tag标签号
@@ -51,7 +55,7 @@ git push $git_url master
 if [[ $? -eq 0 ]]; then
 #私有库校验和更新repo输入y，公有库输入n
 	read -p "验证私有库/公有库请输入 -> 私有库[y] -> 公有库[n]：" privates
-	isyes="yes"
+	
 #通过pod指令校验.podspec私有库/公有库文件是否合法
 	if [[ $isyes == *$privates* ]]; then
 #如果私有库中引用了其他私有库，则需要另外的校验格式
