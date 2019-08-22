@@ -16,7 +16,7 @@ git_url=https://github.com/$developer_name/$hsyCocoapodsSDK.git
 echo $git_url
 #判断本地的repo列表中是否存在了对应的repo，如果不存在，则将远端仓库添加至本地，并创建一个origin分支
 if [[ ${repoList} != *${hsyCocoapodsSDK}* ]]; then
-	pod repo add $hsyCocoapodsSDK git_url
+	pod repo add $hsyCocoapodsSDK $git_url
 	#git remote add origin git_url
 fi
 #打印本地的repo列表内容
