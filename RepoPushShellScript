@@ -37,23 +37,33 @@ read -p "请输入这个GitHub邮箱名称：" email_name
 git init
 git config --global user.name $developer_name
 git config --global user.email $email_name
-git remote add origin $git_url
+
+#先检验远端是否已经存在了origin仓库，如果没有则添加一个origin仓库
+all_remote=$(git remote -v)
+echo "********************当前的remotes仓库**********************"
+echo ${all_remote}
+echo "**********************************************************"
+if [[ ${all_remote} != *origin* ]]; then
+	git remote add origin $git_url #git@github.com:$developer_name/$hsyCocoapodsSDK.git
+fi
+
 #输入当前更新财富私有库repo的远端仓库的tag标签号
 read -p "请输入私有库的分支tag：" thisTag
-#如果输入的tag标签不存在，则将这个标签tag添加至本地，然后推送至远端仓库
-allTags=$(git tag)
-if [[ ${allTags} != *${thisTag}* ]]; then
+#如果输入的tag标签不存在，则将这个标签tag添加至本地
+all_tags=$(git tag)
+if [[ ${all_tags} != *${thisTag}* ]]; then
 	git tag $thisTag
-	git push --tags
 fi
+#执行一次push tags操作来避免本地有tags未能提交
+git push --tags
 
 #执行commit和push操作，将update之后的更新内容提交至git远端仓库
 git add .
 git commit -m "commit -> $hsyCocoapodsSDK" 
-git push -u origin +master
-# git pull --rebase origin $git_url --allow-unrelated-histories
-# git pull origin $git_url --allow-unrelated-histories
-# git push -u origin $git_url
+git pull origin master --allow-unrelated-histories 
+# git pull $git_url master --allow-unrelated-histories 
+git push origin master
+#git push -u origin +master
 
 #判断git操作是否成功，如果不成功则退出，避免出现漏提交
 if [[ $? -eq 0 ]]; then
