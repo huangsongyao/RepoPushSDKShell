@@ -61,9 +61,14 @@ git push --tags
 git add .
 git commit -m "commit -> $hsyCocoapodsSDK" 
 git pull origin master --allow-unrelated-histories 
-# git pull $git_url master --allow-unrelated-histories 
-git push origin master
-#git push -u origin +master
+#下拉成功后才能提交
+if [[ $? -eq 0 ]]; then
+	git push origin master
+	#git push -u origin +master
+else
+	echo "Git pull失败！正在退出进程！"
+	exit 0
+fi
 
 #判断git操作是否成功，如果不成功则退出，避免出现漏提交
 if [[ $? -eq 0 ]]; then
@@ -103,7 +108,7 @@ if [[ $? -eq 0 ]]; then
 				pod trunk push $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
 			fi
 #完成后执行拉去操作，将远端仓库的内容拉取至本地
-			git pull $git_url master
+			git pull origin master --allow-unrelated-histories 
 #同步更新本地的repo仓库状态
 			git repo update
 			echo "新版本发布完毕，正在准备退出进程!"
