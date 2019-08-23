@@ -11,29 +11,51 @@ repoList=$(pod repo list)
 #声明变量为sdk
 read -p "请输入私有库git地址的名称：" hsyCocoapodsSDK
 read -p "请输入GitHub仓库的仓库拥有者地址，例如https://github.com/huangsongyao，则输入huangsongyao：" developer_name
+#声明一个变量，用于获悉外部输入的Yes或者No
+isyes="yes"
+#设置好这个远端地址
 git_url=https://github.com/$developer_name/$hsyCocoapodsSDK.git
+echo "******************即将作为远端的仓库地址******************"
 echo $git_url
+echo "*******************************************************"
 #判断本地的repo列表中是否存在了对应的repo，如果不存在，则将远端仓库添加至本地，并创建一个origin分支
 if [[ ${repoList} != *${hsyCocoapodsSDK}* ]]; then
+	echo "远端仓库repo不存在本地，正在开启仓库克隆，可能会耗费一些时间"
+	echo "第一次远端仓库repo克隆开始，仓库地址: ${git_url} --- 请稍等..."
 	pod repo add $hsyCocoapodsSDK $git_url
+#如果上个克隆操作失败，则重新执行一次克隆
+	if [[ $? -ne 0 ]]; then
+		echo "第一次克隆远端仓库的repo至本地失败!仓库地址: ${git_url} -> 正在尝试重新克隆，请稍等..."
+		echo "开始第二次仓库克隆..."
+		pod repo add $hsyCocoapodsSDK $git_url
+#如果第二次克隆也失败，则根据用户自己的操作来决定是否要退出进程或是继续执行
+		if [[ $? -ne 0 ]]; then
+			read -p "第二次远端仓库repo克隆失败!是否退出进程重新执行本脚本？-> 退出进行输入[y] -> 继续执行脚本输入[n]：" exit_script
+			if [[ $isyes == *$exit_script* ]]; then
+				echo "正在退出脚本进程..."
+				exit 0
+			fi
+		fi
+	fi
 fi
 #打印本地的repo列表内容
+echo "********************本地Mac设备中的repo列表如下********************"
 pod repo list
-
+echo "****************************************本***********************"
 #将当前路径移动至Example的私有库项目下
 cd $work_path/Example
 #执行update，更新私有库的pod仓库插件，同步内容
-isyes="yes"
-read -p "请输入操作类型：-> 执行install输入[y] -> 执行update输入[n]：" operate_type
+read -p "请输入cocoapods的操作类型：-> 执行'pod install'输入[y] -> 执行'pod update'输入[n]：" operate_type
 if [[ $isyes == *$operate_type* ]]; then
 	pod install
 else
 	pod update
 fi
+
 #将当前路径移动至.git隐藏文件和脚本所在的绝对路径下
 cd $work_path
 #初始化git，创建远端仓库链接，创建origin远程分支
-read -p "请输入这个GitHub邮箱名称：" email_name 
+read -p "请输入这个GitHub账号的邮箱名称：" email_name 
 git init
 git config --global user.name $developer_name
 git config --global user.email $email_name
@@ -48,11 +70,11 @@ if [[ ${all_remote} != *origin* ]]; then
 fi
 
 #输入当前更新财富私有库repo的远端仓库的tag标签号
-read -p "请输入私有库的分支tag：" thisTag
+read -p "请输入私有库的分支tag：" this_tag
 #如果输入的tag标签不存在，则将这个标签tag添加至本地
 all_tags=$(git tag)
-if [[ ${all_tags} != *${thisTag}* ]]; then
-	git tag $thisTag
+if [[ ${all_tags} != *${this_tag}* ]]; then
+	git tag $this_tag
 fi
 #执行一次push tags操作来避免本地有tags未能提交
 git push --tags
@@ -72,9 +94,9 @@ fi
 
 #判断git操作是否成功，如果不成功则退出，避免出现漏提交
 if [[ $? -eq 0 ]]; then
+	echo "************************即将进入.podspec文件的校验环境，请确保.podspec文件的ruby语法的正确性***********************"
 #私有库校验和更新repo输入y，公有库输入n
 	read -p "验证私有库/公有库请输入 -> 私有库[y] -> 公有库[n]：" privates
-	
 #通过pod指令校验.podspec私有库/公有库文件是否合法
 	if [[ $isyes == *$privates* ]]; then
 #如果私有库中引用了其他私有库，则需要另外的校验格式
