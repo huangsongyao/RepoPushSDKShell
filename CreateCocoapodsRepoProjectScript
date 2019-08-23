@@ -12,11 +12,16 @@ cd $work_path
 
 #先删除本地的同名文件夹，再将远端的私有库/公有库的代码仓库克隆至到本地
 rm -rf $repo_name
-git clone https://github.com/$git_user_name/$repo_name
-#根据指令创建cocoapods公有库/私有库的工程
+git_url=https://github.com/$git_user_name/$repo_name
+git clone $git_url
+#进入所克隆的仓库的本地绝对路径
 cd $repo_name
+#根据指令创建cocoapods公有库/私有库的工程
 pod lib create $repo_name
 if [[ $? -eq 0 ]]; then	
+	echo "cocoapods公有库/私有库工程创建成功!"
+	echo "准备开始合并私有库文件到远端仓库中，请关闭由cocoapods自动打开的Example工程，在合并完毕后再从 -> ${repo_name} <- 仓库中打开!"
+	echo "开始合并..."
 #私有库/公有库工程创建成功后，声明一个临时文件名称来替换工程的文件夹名称
 	repo_test_name="this_repo_test_name"
 	mv $repo_name $repo_test_name
@@ -26,19 +31,35 @@ if [[ $? -eq 0 ]]; then
 	shell_git_name="RepoPushSDKShell"
 	shell_name="RepoPushShellScript"
 #将远端的自动化脚本克隆至本地
-	git clone https://github.com/huangsongyao/$shell_git_name.git
+	echo "cocoapods公有库/私有库工程合并完毕!"
+	echo "准备开始克隆远端.podspec版本发布快速脚本!"
+	echo "克隆开始..."
+	url_script=https://github.com/huangsongyao/$shell_git_name.git
+	git clone $url_script
+#如果脚本克隆失败，在终端中打印信息，并由用户决定是否继续执行脚本
+	if [[ $? -ne 0 ]]; then
+		read -p "脚本克隆失败！脚本地址：${url_script} 是否继续跳过该脚本的下载，继续执行本脚本？-> 继续执行输入[y] -> 退出本脚本输入[n]：" operated_type
+		isno="no"
+		if [[ $isno == *$operated_type* ]]; then
+			echo "请在本脚本退出后，重新执行本脚本，脚本会将本地工作路径下的缓存文件自动清除"
+			echo "正在退出本脚本..."
+			exit 0
+		fi
+	fi
 #移动至自动化脚本的绝对路径下，并拷贝脚本文件到cocoapods公有库/私有库的工程的根目录下
 	cd $work_path/$repo_name/$repo_test_name/$shell_git_name
-	cp $shell_name $work_path/$repo_name$repo_test_name
-#移动至cocoapods公有库/私有库的工程的根目录下
+	cp $shell_name $work_path/$repo_name
+#拷贝脚本后删除这个脚本仓库
 	cd $work_path/$repo_name/$repo_test_name
-#删除刚才下载的远端自动化打包脚本的文件夹
 	rm -rf $shell_git_name
+	# rm -rf LICENSE
 #拷贝所有关键内容至远端仓库中
 	cp -r $work_path/$repo_name/$repo_test_name/. $work_path/$repo_name
 	echo "拷贝完毕，正在删除无用目录，请稍后..."
+#先删除被改了名称的cocoapods公有库/私有库的工程的目录
 	cd $work_path/$repo_name
 	rm -rf $repo_test_name
+#最后删除脚本工作路径生产的额外文件
 	cd $work_path
 	rm -rf $repo_name$repo_test_name
 	echo "清理完毕，cocoapods私有库/公有库创建完毕!"
