@@ -19,17 +19,33 @@ runtime_sdk_path="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.
 
 #复制对应的内容至模拟器路径下
 cd $work_path/$simulator_sdk
-cp libstdc++.dylib libstdc++.6.dylib libstdc++.6.0.9.dylib $simulator_sdk_path
+echo "开始同步模拟器路径..."
+sudo cp libstdc++.dylib libstdc++.6.dylib libstdc++.6.0.9.dylib $simulator_sdk_path
+if [[ $? -ne 0 ]]; then
+	echo "模拟器静态包copy失败！请检查路径是否正确!"
+	exit 0
+fi
 
 #复制对应的内容至真机路径下
 cd $work_path/$os_sdk
-cp libstdc++.dylib libstdc++.6.dylib libstdc++.6.tbd libstdc++.6.0.9.tbd $os_sdk_path
+echo "开始同步真机路径..."
+sudo cp libstdc++.dylib libstdc++.6.dylib libstdc++.6.tbd libstdc++.6.0.9.tbd $os_sdk_path
+if [[ $? -ne 0 ]]; then
+	echo "真机静态包copy失败！请检查路径是否正确!"
+	exit 0
+fi
 
 #复制对应的内容至Mac的runtime路径下
 cd  $work_path/$runtime_sdk
-cp libstdc++.6.dylib $runtime_sdk_path
+echo "开始同步runtime路径..."
+sudo cp libstdc++.6.dylib $runtime_sdk_path
+if [[ $? -ne 0 ]]; then
+	echo "runtime静态包copy失败！请检查路径是否正确!"
+	exit 0
+fi
 
 #使用指令注入applescript脚本，执行退出Xcode
+echo "静态包copy完毕，正在准备退出Xcode，请重新Xcode..."
 program_name="Xcode"
 osascript <<EOF
 	tell application "$program_name"
@@ -38,5 +54,7 @@ osascript <<EOF
 EOF
 
 #完成后退出
-echo "completed!"
+echo "Xcode退出！脚本结束!"
 exit 0
+
+
