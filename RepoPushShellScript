@@ -122,7 +122,7 @@ if [[ $? -eq 0 ]]; then
 	if [[ $? -eq 0 ]]; then
 #由发布者决定在通过验证后是否立即将.podspec发布到对应的环境下
 		read -p "是否立即将私有库/公有库的.podspec发布出去？-> 立即发布请输入[y] -> 不立即发布请输入[n]：" release_podspec
-		if [[ $isyes == *release_podspec* ]]; then
+		if [[ $isyes == *$release_podspec* ]]; then
 #将合法的私有库/公有库文件.podspec推送至远端仓库
 			if [[ $isyes == *$privates* ]]; then
 				pod repo push $hsyCocoapodsSDK $hsyCocoapodsSDK.podspec --allow-warnings --use-libraries
