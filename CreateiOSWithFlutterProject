@@ -1,0 +1,67 @@
+#!/bin/bash
+#Author by huangsongyao 
+#huangsongyao -> https://github.com/huangsongyao
+
+#配置工作路径
+work_path=$(dirname $0)
+cd $work_path
+
+#输入flutter的本地配置的flutter库的绝对路径
+read -p "请输入flutter的库在本地环境的绝对路径:" flutter_path
+#输入Android SDK的本地环境的绝对路径
+read -p "请输入Android SDK在本地环境的绝对路径[可通过 Preferences -> Appearance & Behavior -> System Settings -> Android SDK -> 右侧的 -> Android SDK Location 查看]:" android_sdk_path
+
+#获取bash_profile文件的本地路径
+profile_name="bash_profile"
+bash_profile_path=$(echo ~/.${profile_name})
+echo $bash_profile_path
+
+#如果不存在这个文件，则写入对应地址到文件中
+if [[ ! -f "$bash_profile_path" ]]; then
+
+#声明几个变量存储美元符和大括号，以及关键字集，再写入到vim中
+cat_path="PATH"
+cat_left_symbol="{"
+cat_right_symbol="}"
+cat_dollar_symbol="$"
+cat_android_path="ANDROID_HOME"
+cat>$bash_profile_path<<EOF 
+
+export PATH=$flutter_path/bin:${cat_dollar_symbol}$cat_path
+export ANDROID_HOME="$android_sdk_path"
+export PATH=${cat_dollar_symbol}${cat_left_symbol}${cat_path}${cat_right_symbol}:${cat_left_symbol}${cat_dollar_symbol}${cat_android_path}${cat_right_symbol}/tools:${cat_dollar_symbol}$cat_android_path/platform-tools
+export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+
+EOF
+
+else
+
+#如果文件已存在，则用vim编辑器打开确认
+vim ~/.$profile_name
+
+fi
+
+#写入后需要判断是否立即执行
+read -p "是否立即执行编辑[y/n]?" operated_state
+
+operated_dire="yes"
+if [[ $operated_dire == *$operated_state* ]]; then
+	#文件写入结束后，编译一下这个bash_profile文件
+	source $HOME/.$profile_name
+fi
+
+#将当前的路径移动到JDK的路径下，编译一次Android Studio的Java SDK的licenses
+read -p "是否已经安装过了JDK-8?如果安装的非JDK-8信任licenses时可能会产生错误-[y/n]?" installation_jdk
+if [[ $operated_dire == *$installation_jdk* ]]; then
+	#移动到java SDK的路径下，信任licenses
+	read -p "请输入Mac设备的当前登录用户名:" mac_user_name
+	sdkmanager_address="/User/${mac_user_name}/Library/Android/sdk/tools/bin"
+	cd $sdkmanager
+	echo $sdkmanager
+	./sdkmanager --licenses
+fi
+
+exit 0
+
+
