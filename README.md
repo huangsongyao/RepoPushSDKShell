@@ -19,3 +19,5 @@
 10、xcode10_link_lstdc文件夹中的CreatteXcodeDtylib脚本：用于处理xcode10以后被移除的dylib库缺失问题
 
 11、PodfileCocoapodsShellScript：用于未生成cocoapods插件或者已经生成了cocoapods插件的Xcode工程的快速生成或者更新，将脚本放置于root根目录下，双击即可
+
+12、CreateiOSWithFlutterProject：用户Mac设备快速配置好flutter的相关环境，使用时需要先下载好flutter官方的SDK及安装好Android studio，双击脚本根据脚本提示内容输入后即可
