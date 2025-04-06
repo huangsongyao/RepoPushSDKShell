@@ -1,0 +1,20 @@
+#!/bin/bash
+#Author by huangsongyao 
+#huangsongyao -> https://github.com/huangsongyao
+
+#SwiftUI-package名称
+read -p "請輸入SwiftUI-package，例如【package】：" package_name
+
+#移动至当前脚本的路径下，来创建SwiftUI-package
+work_path=$(dirname $0)
+cd $work_path
+
+#創建SwiftUI-package工程
+mkdir $package_name
+cd $package_name
+swift package init --type executable
+
+
+#完成后退出
+echo "completed!"
+exit 0
