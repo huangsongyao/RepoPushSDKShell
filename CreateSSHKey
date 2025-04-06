@@ -18,7 +18,6 @@ had_rsa=`cat ~/.ssh/id_rsa.pub`
 if [[ $had_rsa == "" ]]; then
 	#檢測到未創建ssh-key，立即創建公鑰
 	ssh-keygen -t rsa -C $git_email
-	cat id_rsa.pub
 fi
 
 #輸出公鑰
