@@ -1,0 +1,29 @@
+#!/bin/bash
+#Author by huangsongyao 
+#huangsongyao -> https://github.com/huangsongyao
+
+#輸入ssh-key本機配置信息
+read -p "請輸入GitHub配置於本機的名稱：" git_name
+read -p "請輸入GitHub郵箱賬號：" git_email
+
+#配置ssh-key賬號到MacBook
+git config --global user.name $git_name
+git config --global user.name $git_email
+
+#打印配置結果
+git config --global --list
+
+#如果不存在公鑰，則創建公鑰並打印，否則打印公鑰，最後退出程序
+had_rsa=`cat ~/.ssh/id_rsa.pub`
+if [[ $had_rsa == "" ]]; then
+	#檢測到未創建ssh-key，立即創建公鑰
+	ssh-keygen -t rsa -C $git_email
+	cat id_rsa.pub
+fi
+
+#輸出公鑰
+echo $had_rsa
+
+#完成后退出进程
+echo "completed!"
+exit
